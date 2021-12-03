@@ -90,7 +90,7 @@
       </BuildableProductRunnable>
       <CommandLineArguments>
          <CommandLineArgument
-            argument = "default [] -r 2 -l Moscow -p 12000 24000"
+            argument = "default -r 2 -l Moscow -p 12000 24000"
             isEnabled = "YES">
          </CommandLineArgument>
       </CommandLineArguments>

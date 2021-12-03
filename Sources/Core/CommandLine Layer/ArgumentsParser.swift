@@ -55,7 +55,7 @@ public class ArgumentsParser: Parser {
     private func isHelp(_ arg: String) -> Bool { arg.contains("-help") }
     
     private func isEnoughArgs() -> Bool {
-        store.size >= 3 ? true : false
+        store.size >= 2 ? true : false
     }
     
     
@@ -77,7 +77,6 @@ public class ArgumentsParser: Parser {
     
     private func getRequiredCommands() throws -> [Command: [String]] {
         let fileNamePtr = store.head!.next!
-        let columnsPtr = fileNamePtr.next!
         
         guard isValidRequiredArgument(fileNamePtr.value, byIndex: FILE_NAME_INDEX), let fileName = Command(FILE_NAME_INDEX) else {
             let error = ParsingError.invalidArgument(index: FILE_NAME_INDEX, arg: fileNamePtr.value)
@@ -85,22 +84,14 @@ public class ArgumentsParser: Parser {
             throw error
         }
         
-        guard isValidRequiredArgument(columnsPtr.value, byIndex: COLUMNS_INDEX), let columns = Command(COLUMNS_INDEX) else {
-            let error = ParsingError.invalidArgument(index: COLUMNS_INDEX, arg: columnsPtr.value)
-            delegate?.onThrowingError(error)
-            throw error
-        }
-        
-        globalPointer = columnsPtr.next
-        return [fileName: [fileNamePtr.value], columns: [columnsPtr.value]]
+        globalPointer = fileNamePtr.next
+        return [fileName: [fileNamePtr.value]]
     }
     
     private func isValidRequiredArgument(_ arg: String, byIndex i: Int) -> Bool {
         switch i {
             case 1:
                 return arg.contains(".") || arg.contains("default")
-            case 2:
-                return arg.first == "["  && arg.last == "]"
             default:
                 return false
         }

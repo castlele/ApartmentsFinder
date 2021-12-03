@@ -18,60 +18,60 @@ final class ArgumentsParserTests: XCTestCase {
             // By default this will not cause an error.
             // But if file doesn't exist and there are no .csv file,
             // the error will occure later in the process of file management
-            "afind", "table.csv", "[]",
+            "afind", "table.csv",
             "-p", "24000", // It is valid to use only upper bounds
             "-l", "Moscow",
             "-r", "2"
         ]
         let validArgExpectation_1 = SessionArguments(
-            fileName: "table.csv", columns: [],
+            fileName: "table.csv",
             price: 0...24000, location: "Moscow", rooms: [2])
         
         let validArgs_2 = [
-            "afind", "table.csv", "[id,name,url]",
+            "afind", "table.csv",
             "-p", "12000", "24000",
             "-l", "Moscow",
             "-r", "1", "2"
         ]
         let validArgs_3 = [
-            "afind", "table.csv ", "[id, name, url]", // All spaces will be trimmed
+            "afind", "table.csv ",
             "-p", "12000", "24000",
             "-l", "Moscow",
             "-r", "1", "2"
         ]
         let validArgExpectation_2_3 = SessionArguments(
-            fileName: "table.csv", columns: ["id", "name", "url"],
+            fileName: "table.csv",
             price: 12000...24000, location: "Moscow", rooms: [1, 2])
         
         let validArgs_4 = [
             // default is a keyword.
             // It will be searching for file with name tabel.csv or for any .csv file if table.csv doesn't exist.
-            "afind", "default", "[]",
+            "afind", "default",
             "-p", "12000", "24000",
             "-l", "Moscow",
             "-r", "1", "2"
         ]
         let validArgs_5 = [
-            "afind", "default", "[]",
+            "afind", "default",
             "-p", "24000", "12000", "12000", // Upper and lower bounds can be mixed and equal values can be repeated
             "-l", "Moscow",
             "-r", "1", "2", "2" // Equal values can be repeated
         ]
         let validArgExpectation_4_5 = SessionArguments(
-            fileName: "default", columns: [],
+            fileName: "default",
             price: 12000...24000, location: "Moscow", rooms: [1, 2])
         
         let validArgs_6 = ["afind", "-help"]
         let validArgExpectation_6 = SessionArguments.help
         
         let invalidArgs_1 = [
-            "afind", "default", "[id,name,url]",
+            "afind", "default",
             "-pasdf", "12000", "24000", // Invalid command label
             "-l", "Moscow",
             "-r", "1", "2"
         ]
         let invalidArgs_2 = [
-            "afind",  // Second (file name) and third (columns' names) args are necessary
+            "afind",  // Second (file name) arg is necessary
             "-p", "12000", "24000",
             "-l", "Moscow",
             "-r", "1", "2"
@@ -79,7 +79,7 @@ final class ArgumentsParserTests: XCTestCase {
         let invalidArgs_3 = ["afind"]
         
         let invalidArgs_4 = [
-            "afind", "table.csv", "[]",
+            "afind", "table.csv",
             "-p", "hello", // Wrong type of command's value
             "-l", "Moscow",
             "-r", "1", "2"

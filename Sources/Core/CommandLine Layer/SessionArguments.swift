@@ -1,10 +1,8 @@
 let FILE_NAME_INDEX = Int(SessionArguments.Key.fileName.rawValue)!
-let COLUMNS_INDEX = Int(SessionArguments.Key.columns.rawValue)!
 
 public struct SessionArguments: Encodable {
     public enum Key: String, CLKey {
         case fileName = "1"
-        case columns = "2"
         case price = "-p"
         case location = "-l"
         case rooms = "-r"
@@ -14,7 +12,6 @@ public struct SessionArguments: Encodable {
     static public let sessionCommands: [String] = Key.allCases.map { $0.rawValue }
     
     public var fileName: String?
-    public var columns: [String]?
     public var price: ClosedRange<Double>?
     public var location: String?
     public var rooms: [Int]?
@@ -23,14 +20,12 @@ public struct SessionArguments: Encodable {
     
     public init(
         fileName: String? = nil,
-        columns: [String]? = nil,
         price: ClosedRange<Double>? = nil,
         location: String? = nil,
         rooms: [Int]? = nil,
         help: Bool = false
     ) {
         self.fileName = fileName
-        self.columns = columns
         self.price = price
         self.location = location
         self.rooms = rooms
@@ -42,13 +37,8 @@ public struct SessionArguments: Encodable {
             throw ParsingError.unexpectedErrorCantFind(cmd: Command(FILE_NAME_INDEX)!)
         }
         
-        guard let cols = args[Command(COLUMNS_INDEX)!] else {
-            throw ParsingError.unexpectedErrorCantFind(cmd: Command(COLUMNS_INDEX)!)
-        }
-        
         self.init(
             fileName: fileName.first,
-            columns: Self.makeColumns(cols.first!),
             price: try Self.makePrice(args[Command(Key.price.rawValue)!]),
             location: try Self.makeLocation(args[Command(Key.location.rawValue)!]),
             rooms: try Self.makeRooms(args[Command(Key.rooms.rawValue)!])
