@@ -39,7 +39,7 @@ public struct Apartment: Identifiable, Decodable {
     }
     
     public func convertToCSV() -> String {
-        "\"\(wrappedName)\" , \"\(wrappedUrl)\" , \"\(wrappedPrice)\" , \"\(wrappedAdditionalInfo)\" , \"\(wrappedAddress)\""
+        "\"\(wrappedName)\",\"\(wrappedUrl)\",\"\(wrappedPrice)\",\"\(wrappedAdditionalInfo)\",\"\(wrappedAddress)\""
     }
     
     mutating public func processValues() {

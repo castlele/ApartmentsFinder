@@ -185,6 +185,9 @@ class SiteParser:
         """
         Configures amount of rooms on the web site according to the given configuration.
         """
+        if not self._configuration.rooms:
+            return
+
         if len(self._configuration.rooms) == 0:
             radio_button_path = self._site.get_rooms()[0]
             radio_button = self._driver.find_element(By.XPATH, radio_button_path)
