@@ -3,26 +3,10 @@ from selenium.webdriver.safari.webdriver import WebDriver
 from selenium.webdriver.common.by import By
 from logger import StandardCLLogger
 from utils import Any, Logger, Optional
+import configurations as config
 import apartments as aparts
 import json
 import time
-
-
-class Configurations:
-    """
-    Configurations which should be followed while filtering the apartments.
-    """
-    price: range = None
-    location: str = None
-    rooms: list[int] = None
-
-    def __init__(self, json_data: dict[Any]):
-        self.price = range(json_data["price"][0], json_data["price"][1])
-        self.location = json_data["location"]
-        self.rooms = json_data["rooms"]
-
-    def __repr__(self):
-        return f"Config:\n\t{self.price=}\n\t{self.location=}\n\t{self.rooms=}"
 
 
 class ParserDelegate:
@@ -72,17 +56,17 @@ class SiteParser:
     """
     Configures, filters and parses the apartments from the given web site.
     """
-    _configuration: Configurations
+    _configuration: config.Configurations
     _site: aparts.ApartmentsSite
     _driver: WebDriver
     _delegate: Optional[ParserDelegate]
 
     def __init__(self,
-                 config: Configurations,
+                 configuration: config.Configurations,
                  site: aparts.ApartmentsSite,
                  delegate: Optional[ParserDelegate] = None,
                  web_driver: WebDriver = webdriver.Safari()):
-        self._configuration = config
+        self._configuration = configuration
         self._site = site
         self._delegate = delegate
         self._setup_driver(web_driver)
@@ -266,7 +250,7 @@ def _convert_apartments_to_json(apartments: list[aparts.Apartment]) -> str:
     return json_data
 
 
-def _make_config(json_data: str) -> Configurations:
+def _make_config(json_data: str) -> config.Configurations:
     """
     Makes config from the given json data.
 
@@ -274,8 +258,8 @@ def _make_config(json_data: str) -> Configurations:
     :return: `Configurations` object.
     """
     data = _convert_json_to_dict(json_data)
-    config = Configurations(data)
-    return config
+    configuration = config.Configurations(data)
+    return configuration
 
 
 def request(json_data: str) -> str:
@@ -285,9 +269,9 @@ def request(json_data: str) -> str:
     :param json_data: config as a json string.
     :return: json string which represents list of apartments.
     """
-    config = _make_config(json_data)
+    configuration = _make_config(json_data)
     parser_delegate = ParserDelegate(logger=StandardCLLogger)
-    parser = SiteParser(config, aparts.ApartmentsSite.avito, delegate=parser_delegate)
+    parser = SiteParser(configuration, aparts.ApartmentsSite.avito, delegate=parser_delegate)
 
     json_data = ""
 
@@ -303,9 +287,8 @@ if __name__ == "__main__":
     sample_data = '{' \
                   '"fileName":"default",' \
                   '"isHelp":false,' \
-                  '"columns":[],' \
                   '"price":[12000,24000],' \
                   '"location":"Moscow",' \
                   '"rooms":[2, 1]' \
                   '}'
-    print(request(sample_data))
+    # print(request(sample_data))
