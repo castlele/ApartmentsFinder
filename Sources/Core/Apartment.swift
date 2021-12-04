@@ -41,6 +41,18 @@ public struct Apartment: Identifiable, Decodable {
     public func convertToCSV() -> String {
         "\"\(wrappedName)\" , \"\(wrappedUrl)\" , \"\(wrappedPrice)\" , \"\(wrappedAdditionalInfo)\" , \"\(wrappedAddress)\""
     }
+    
+    mutating public func processValues() {
+        processPrice()
+    }
+    
+    mutating private func processPrice() {
+        guard let price = price else {
+            return
+        }
+        let numbers = price.split(separator: " ")[0...1]
+        self.price = numbers.joined(separator: "")
+    }
 }
 
 extension Apartment: CustomStringConvertible {

@@ -50,6 +50,14 @@ public struct NetworkRequester {
         guard let apartments = Decoder.decode(data: data, logger: logger) else {
             return nil
         }
-        return apartments
+        
+        var processedApartments = [Apartment]()
+        
+        for apartment in apartments {
+            var mutableApartment = apartment
+            mutableApartment.processValues()
+            processedApartments.append(mutableApartment)
+        }
+        return processedApartments
     }
 }
