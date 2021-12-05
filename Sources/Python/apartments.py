@@ -104,6 +104,16 @@ class ApartmentsSite(enum.Enum):
 
         return lower_path, upper_path
 
+    def get_apply_button(self) -> str:
+        """
+        Gets button, that applies all changes in configuration.
+
+        :return: string, which represents xpath of the button element.
+        """
+        match self:
+            case self.avito:
+                return '//*[@id="app"]/div[3]/div[3]/div[1]/div/div[2]/div[2]/div/button[1]'
+
 
 class Apartment:
     """

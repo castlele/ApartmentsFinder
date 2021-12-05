@@ -152,6 +152,8 @@ class SiteParser:
             self._set_rooms()
             self._set_price()
 
+            self.apply_config()
+
             if self._delegate:
                 self._delegate.configuration_was_completed()
 
@@ -220,6 +222,16 @@ class SiteParser:
 
         if self._delegate:
             self._delegate.price_was_set(self._configuration.price)
+
+    def apply_config(self):
+        """
+        Applies configuration on the web site.
+        """
+        apply_button = self._site.get_apply_button()
+        button = self._driver.find_element(By.XPATH, apply_button)
+        button.click()
+
+        time.sleep(5)
 
     def deinit(self, timeout: float):
         """
